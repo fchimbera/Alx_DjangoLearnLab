@@ -2,7 +2,7 @@ from django.db import models
 
 
 # Author model.
-class Author (models.Model):
+class Author(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -10,7 +10,7 @@ class Author (models.Model):
 
 
 # Book model
-class Book (models.Model):
+class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='Book')
 
@@ -19,7 +19,7 @@ class Book (models.Model):
 
 
 # Library model
-class Library (models.Model):
+class Library(models.Model):
     name = models.CharField(max_length=100)
     books = models.ManyToManyField(Book, related_name='libraries')
 
@@ -28,7 +28,7 @@ class Library (models.Model):
 
 
 # Librarian model
-class Librarian (models.Model):
+class Librarian(models.Model):
     name = models.CharField(max_length=100)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
