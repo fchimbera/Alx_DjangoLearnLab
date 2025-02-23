@@ -17,3 +17,7 @@ class LibraryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['books'] = Book.objects.filter(library=self.object)
         return context
+    # book_detail view
+    def book_detail(request, pk):
+        book = Book.objects.get(pk=pk)
+        return render(request, 'relationship_app/book_detail.html', {'book': book})
