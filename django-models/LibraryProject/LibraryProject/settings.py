@@ -57,7 +57,7 @@ ROOT_URLCONF = 'LibraryProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [r'Users\CSF\Desktop\alx\Alx_DjangoLearnLab\django-models\LibraryProject\relationship_app\templates'],
+        'DIRS': [r'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
