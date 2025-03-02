@@ -16,8 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from views import LibraryDetailView
+from . import LibraryDetailView
 from . import views
 
 
