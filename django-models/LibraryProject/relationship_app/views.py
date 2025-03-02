@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-
+from django.contrib.auth.decorators import user_passes_test
 
 # list_books view
 def list_books(request):
@@ -38,3 +38,25 @@ class SignUpView(CreateView):
         if form_class is None:
             form_class = self.get_form_class()
         return form_class(self.request.POST or None)
+
+
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
+
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+def is_librarian(user):
+    return user.userprofile.role == 'Librarian'
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+def is_member(user):
+    return user.userprofile.role == 'Member'
+
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'member_view.html')
