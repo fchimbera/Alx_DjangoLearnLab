@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
-from .models import Book, Library
+from .models import Book
+from .models import Library
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
+
+
 # list_books view
 def list_books(request):
     books = Book.objects.all()  # Query all books
@@ -22,7 +25,7 @@ class LibraryDetailView(DetailView):
 
 # Register view
 class SignUpView(CreateView):
-    form_class = UserCreationForm
+    form_class = UserCreationForm()
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
 
@@ -31,17 +34,7 @@ class SignUpView(CreateView):
         login(self.request, user)
         return redirect(self.success_url)
 
-        # Login view
-        def login_view(request):
-            if request.method == 'POST':
-                form = AuthenticationForm(request, data=request.POST)
-                if form.is_valid():
-                    username = form.cleaned_data.get('username')
-                    password = form.cleaned_data.get('password')
-                    user = authenticate(request, username=username, password=password)
-                    if user is not None:
-                        login(request, user)
-                        return redirect('home')
-            else:
-                form = AuthenticationForm()
-            return render(request, 'relationship_app/login.html', {'form': form})
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        return form_class(self.request.POST or None)
