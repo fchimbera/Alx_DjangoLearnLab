@@ -7,6 +7,7 @@ from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import user_passes_test
+from .utils import role_check
 
 # list_books view
 def list_books(request):
@@ -40,23 +41,14 @@ class SignUpView(CreateView):
         return form_class(self.request.POST or None)
 
 
-def is_admin(user):
-    return user.userprofile.role == 'Admin'
-
-@user_passes_test(is_admin)
+@user_passes_test(role_check('Admin'))
 def admin_view(request):
-    return render(request, 'admin_view.html')
+    return render(request, 'relationship_app/admin_view.html')
 
-def is_librarian(user):
-    return user.userprofile.role == 'Librarian'
-
-@user_passes_test(is_librarian)
+@user_passes_test(role_check('Librarian'))
 def librarian_view(request):
-    return render(request, 'librarian_view.html')
+    return render(request, 'relationship_app/librarian_view.html')
 
-def is_member(user):
-    return user.userprofile.role == 'Member'
-
-@user_passes_test(is_member)
+@user_passes_test(role_check('Member'))
 def member_view(request):
-    return render(request, 'member_view.html')
+    return render(request, 'relationship_app/member_view.html')
