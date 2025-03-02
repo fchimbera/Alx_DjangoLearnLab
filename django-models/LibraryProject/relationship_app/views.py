@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
@@ -7,7 +7,11 @@ from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import user_passes_test
-from .utils import role_check
+from .utils import role_check, permission_required_decorator
+from django.http import HttpResponse
+from .forms import BookForm
+
+
 
 # list_books view
 def list_books(request):
@@ -52,3 +56,34 @@ def librarian_view(request):
 @user_passes_test(role_check('Member'))
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+@permission_required_decorator('relationship_app.can_add_book')
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('Book added successfully')
+    else:
+        form = BookForm()
+    return render(request, 'relationship_app/add_book.html', {'form': form})
+
+@permission_required_decorator('relationship_app.can_change_book')
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == 'POST'):
+        form = BookForm(request.POST, instance=book)
+        if form is valid():
+            form.save()
+            return HttpResponse('Book updated successfully')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'relationship_app/edit_book.html', {'form': form})
+
+@permission_required_decorator('relationship_app.can_delete_book')
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == 'POST':
+        book.delete()
+        return HttpResponse('Book deleted successfully')
+    return render(request, 'relationship_app/delete_book.html', {'book': book})

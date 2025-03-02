@@ -1,0 +1,19 @@
+<!-- relationship_app/templates/relationship_app/add_book.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<body>
+    <h1>Add Book</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Book</button>
+    </form>
+    
+    <!-- Optionally, link to other parts of your application -->
+    <a href="{% url 'home' %}">Return Home</a>
+</body>
+</html>
