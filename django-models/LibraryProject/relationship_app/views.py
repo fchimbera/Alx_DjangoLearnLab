@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import user_passes_test
 from .utils import role_check, permission_required_decorator
 from django.http import HttpResponse
 from .forms import BookForm
+from django.contrib.auth.decorators import permission_required
+
 
 
 
