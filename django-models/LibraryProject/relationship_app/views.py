@@ -40,14 +40,11 @@ class SignUpView(CreateView):
         return form_class(self.request.POST or None)
 
 
-from django.http import HttpResponseForbidden
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
 
-def admin_required(user):
-    return user.is_authenticated and user.userprofile.role == 'Admin'
-
+@user_passes_test(is_admin)
 def admin_view(request):
-    if not admin_required(request.user):
-        return HttpResponseForbidden("You do not have permission to view this page.")
     return render(request, 'admin_view.html')
 
 def is_librarian(user):
