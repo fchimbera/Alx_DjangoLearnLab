@@ -23,7 +23,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-31%d8+8#12$@b61v)0fzqqut1d5m#)kj^!$72^))3dn76d%w3$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# settings.py
+# Set to False to prevent displaying debug information in production
+DEBUG = False
+
+# Enable XSS filter in browsers
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent clickjacking
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent content sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforce HTTPS for CSRF and session cookies
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True  # Redirects HTTP to HTTPS
+
 
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -41,6 +58,7 @@ INSTALLED_APPS = [
     'bookshelf',
     'relationship_app',
     'users',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +69,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
+
+# Enforce HTTPS for CSRF and session cookies
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')
 
 ROOT_URLCONF = 'LibraryProject.urls'
 

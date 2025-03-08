@@ -55,3 +55,13 @@ def example_form_view(request):
     else:
         form = ExampleForm()
     return render(request, 'bookshelf/example_form.html', {'form': form})
+
+def search_books(request):
+    query = request.GET.get('q')
+    if query:
+        books = Book.objects.filter(
+            Q(title__icontains=query) | Q(author__icontains=query)
+        )
+    else:
+        books = Book.objects.all()
+    return render(request, 'bookshelf/book_list.html', {'books': books})

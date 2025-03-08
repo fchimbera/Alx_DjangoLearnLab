@@ -9,6 +9,7 @@
 <body>
     <h1>Book List</h1>
     <form method="get" action="{% url 'search_books' %}">
+        {% csrf_token %}
         {{ form.query }}
         <button type="submit">Search</button>
     </form>
