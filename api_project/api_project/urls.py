@@ -21,6 +21,17 @@ from api.urls import urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Route for the BookList view
     path('books/', BookList.as_view(), name='book-list'),  # Maps to the BookList view
+    # Include the API app's URLs
     path('api/urls', include('api.urls'))
 ]
+from rest_framework.authtoken.views import obtain_auth_token
+
+urlpatterns = [
+    ...,
+    # Route for the obtain_auth_token view
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    ...,
+]
+
