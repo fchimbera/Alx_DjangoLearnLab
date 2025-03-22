@@ -2,20 +2,20 @@ from rest_framework import generics
 from .models import Book
 from .serializers import BookSerializer
 from datetime import datetime
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
 # BookListView is a view that will return a list of all books
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 # BookDetailView is a view that will return a single book
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 # BookCreateView is a view that will create a new book
 class BookCreateView(generics.CreateAPIView):
