@@ -4,6 +4,7 @@ from .serializers import BookSerializer
 from datetime import datetime
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.exceptions import ValidationError
+from django_filters import rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
@@ -19,7 +20,7 @@ class BookListView(generics.ListAPIView):
 
     # Search filter is used to search the queryset using the search_fields attribute
     search_fields = ['title', 'author']
-    
+
     # Ordering filter is used to order the queryset using the ordering_fields attribute
     ordering_fields = ['title', 'publication_year']
 
