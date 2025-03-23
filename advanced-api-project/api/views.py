@@ -13,7 +13,7 @@ from rest_framework import filters
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
     # Filterset fields is used to filter the queryset using the filterset_fields attribute
     filterset_fields = ['title', 'author', 'publication_year']
