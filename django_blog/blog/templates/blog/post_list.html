@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/scripts.js' %}"></script>
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>All Posts</h1>
+<ul>
+    {% for post in posts %}
+        <li>
+            <h2><a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></h2>
+            <p>{{ post.content|truncatechars:100 }}</p>
+            <p>Published on: {{ post.published_date }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
