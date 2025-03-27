@@ -16,9 +16,7 @@ class PostForm(forms.ModelForm):
             instance.save()
         return instance
 
-class TagWidget(TextInput):
-    template_name = 'widgets/tag_widget.html'
-    
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -37,3 +35,11 @@ class CommentForm(forms.ModelForm):
         if len(content) > 500:  # Example rule for a maximum character limit
             raise forms.ValidationError("Comment content is too long (maximum 500 characters).")
         return content
+
+class TagForm(forms.Form):
+    tags = forms.CharField(
+    max_length=100,
+    required=False,
+    widget=TagWidget(attrs={'placeholder': 'Add tags separated by commas'}),
+    label='Tags'
+)
