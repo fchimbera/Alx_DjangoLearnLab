@@ -4,7 +4,7 @@ from .models import Post, Comment
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']  # Fields to be included in the form
+        fields = ['title', 'content','tags']  # Fields to be included in the form
 
     def save(self, commit=True):
         instance = super().save(commit=False)

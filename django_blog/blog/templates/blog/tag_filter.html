@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/scripts.js' %}"></script>
+<h2>Posts Tagged with "{{ tag.name }}"</h2>
+<ul>
+    {% for post in posts %}
+        <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+    {% endfor %}
+</ul>
