@@ -1,5 +1,6 @@
 from django import forms
 from .models import Post, Comment
+from django.forms import TextInput
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -15,7 +16,9 @@ class PostForm(forms.ModelForm):
             instance.save()
         return instance
 
-
+class TagWidget(TextInput):
+    template_name = 'widgets/tag_widget.html'
+    
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
