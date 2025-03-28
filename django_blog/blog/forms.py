@@ -41,7 +41,7 @@ class CommentForm(forms.ModelForm):
             raise forms.ValidationError("Comment content is too long (maximum 500 characters).")
         return content
 
-class TagForm(forms.Form):
+class TagWidget(forms.Form):
     tags = forms.CharField(
     max_length=100,
     required=False,
@@ -52,3 +52,4 @@ class TagForm(forms.Form):
         widgets = {
             'tags': forms.TextInput(attrs={'class': 'tag-widget', 'placeholder': 'Enter tags'}),
         }
+
