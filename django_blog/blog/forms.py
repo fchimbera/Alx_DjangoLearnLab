@@ -1,11 +1,15 @@
 from django import forms
 from .models import Post, Comment
 from django.forms import TextInput
+from taggit.forms import TagWidget
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content','tags']  # Fields to be included in the form
+        fields = ['title', 'content', 'tags']  # Include the 'tags' field
+        widgets = {
+            'tags': TagWidget(attrs={'placeholder': 'Add tags separated by commas'}),  # Use TagWidget for tags
+        }
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -14,6 +18,7 @@ class PostForm(forms.ModelForm):
             instance.author = self.initial['author']
         if commit:
             instance.save()
+            self.save_m2m()  # Save many-to-many data (tags)
         return instance
 
 
@@ -40,6 +45,10 @@ class TagForm(forms.Form):
     tags = forms.CharField(
     max_length=100,
     required=False,
-    widget=TagWidget(attrs={'placeholder': 'Add tags separated by commas'}),
+    widget=forms.TextInput(attrs={'placeholder': 'Add tags separated by commas'}),
     label='Tags'
 )
+    class Meta:
+        widgets = {
+            'tags': forms.TextInput(attrs={'class': 'tag-widget', 'placeholder': 'Enter tags'}),
+        }
