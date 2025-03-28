@@ -1,6 +1,6 @@
 from django import forms
 from .models import Post, Comment
-from django.forms import TextInput, widgets
+from django.forms import TextInput
 from taggit.forms import TagWidget
 
 class PostForm(forms.ModelForm):
@@ -38,10 +38,11 @@ class CommentForm(forms.ModelForm):
             raise forms.ValidationError("Comment content is too long (maximum 500 characters).")
         return content
 
-class TagWidget(widgets.TextInput):
+class TagWidget(forms.TextInput):
      def render(self, name, value, attrs=None, renderer=None):
           if isinstance(value,str):
                value = value.split(",")
           value = ",".join(value)
           return super().render(name, value, attrs, renderer)
-    
+
+TagWidget()
