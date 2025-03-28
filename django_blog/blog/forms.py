@@ -7,9 +7,6 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']  # Include the 'tags' field
-        widgets = {
-            'tags': TagWidget(attrs={'placeholder': 'Add tags separated by commas'}),  # Use TagWidget for tags
-        }
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -47,4 +44,4 @@ class TagWidget(widgets.TextInput):
                value = value.split(",")
           value = ",".join(value)
           return super().render(name, value, attrs, renderer)
-
+    
