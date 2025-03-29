@@ -1,12 +1,14 @@
 from django.db import models
 from django.conf import settings
+from accounts.models import CustomUser
+
 
 # Post model representing a blog post in the application.
 # Each post has a title, content, author (linked to the User model), and timestamps for creation and updates.
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
