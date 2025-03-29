@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework import status
+from rest_framework import status, generics
 from .models import CustomUser
 from .serializers import UserSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
-class RegisterView(APIView):
+class RegisterView(generics.GenericAPIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -19,7 +19,7 @@ class RegisterView(APIView):
             return Response({"token": token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class LoginView(APIView):
+class LoginView(generics.GenericAPIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,7 +31,7 @@ class LoginView(APIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def follow_user(request, user_id):
-    user_to_follow = get_object_or_404(CustomUser, id=user_id)
+    user_to_follow = get_object_or_404(CustomUser.objects.all(), id=user_id)
     if user_to_follow != request.user:
         request.user.following.add(user_to_follow)
         return Response({'message': 'You are now following {}'.format(user_to_follow.username)})
@@ -40,7 +40,7 @@ def follow_user(request, user_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def unfollow_user(request, user_id):
-    user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
+    user_to_unfollow = get_object_or_404(CustomUser.objects.all(), id=user_id)
     if user_to_unfollow in request.user.following.all():
         request.user.following.remove(user_to_unfollow)
         return Response({'message': 'You have unfollowed {}'.format(user_to_unfollow.username)})
