@@ -15,6 +15,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 
@@ -61,12 +62,11 @@ class FeedViewSet(ViewSet):
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
-
-class LikePostView(APIView):
+class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
+        post = generics.get_object_or_404(Post, id=post_id)
         like, created = Like.objects.get_or_create(post=post, user=request.user)
         if created:
             # Create notification
@@ -79,12 +79,11 @@ class LikePostView(APIView):
             )
             return JsonResponse({'message': 'Post liked'}, status=201)
         return JsonResponse({'message': 'You already liked this post'}, status=200)
-    
-class UnLikePostView(APIView):
+class UnLikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
+        post = generics.get_object_or_404(Post, id=post_id)
         like = Like.objects.filter(post=post, user=request.user).first()
         if like:
             like.delete()
