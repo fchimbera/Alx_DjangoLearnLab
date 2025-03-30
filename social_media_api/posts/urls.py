@@ -12,5 +12,5 @@ urlpatterns = router.urls
 urlpatterns += [
  #   path('feed/', FeedViewSet.as_view(), name='feed'),
     path('<int:pk>/like/', LikePostView.as_view, name='like-post'),
-    path('<int:pk/unlike/', UnLikePostView.as_view, name='unlike-post'),
+    path('<int:pk>/unlike/', UnLikePostView.as_view, name='unlike-post'),
 ]
