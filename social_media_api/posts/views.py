@@ -62,14 +62,16 @@ class FeedViewSet(ViewSet):
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
-class LikePostView(generics.GenericAPIView):
+
+
+class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, post_id):
-        post = generics.get_object_or_404(Post, id=post_id)
-        like, created = Like.objects.get_or_create(post=post, user=request.user)
+        post = generics.get_object_or_404(Post, pk=post_id)
+
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
         if created:
-            # Create notification
             Notification.objects.create(
                 recipient=post.author,
                 actor=request.user,
@@ -79,13 +81,17 @@ class LikePostView(generics.GenericAPIView):
             )
             return JsonResponse({'message': 'Post liked'}, status=201)
         return JsonResponse({'message': 'You already liked this post'}, status=200)
-class UnLikePostView(generics.GenericAPIView):
+
+
+class UnLikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, post_id):
-        post = generics.get_object_or_404(Post, id=post_id)
+        post = generics.get_object_or_404(Post, pk=post_id)
         like = Like.objects.filter(post=post, user=request.user).first()
+
         if like:
             like.delete()
             return JsonResponse({'message': 'Post unliked'}, status=200)
+
         return JsonResponse({'message': 'You have not liked this post yet'}, status=400)
