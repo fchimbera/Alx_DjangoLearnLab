@@ -6,8 +6,17 @@ from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from notifications.models import Notification
+from .models import Post, Like
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.contrib.contenttypes.models import ContentType
+from rest_framework.views import APIView
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -53,4 +62,31 @@ class FeedViewSet(ViewSet):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
- 
+class LikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        like, created = Like.objects.get_or_create(post=post, user=request.user)
+        if created:
+            # Create notification
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                content_type=ContentType.objects.get_for_model(post),
+                object_id=post.id
+            )
+            return JsonResponse({'message': 'Post liked'}, status=201)
+        return JsonResponse({'message': 'You already liked this post'}, status=200)
+    
+class UnLikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        like = Like.objects.filter(post=post, user=request.user).first()
+        if like:
+            like.delete()
+            return JsonResponse({'message': 'Post unliked'}, status=200)
+        return JsonResponse({'message': 'You have not liked this post yet'}, status=400)
