@@ -149,3 +149,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security setting to prevent clickjacking
 X_FRAME_OPTIONS = 'DENY'
+
+# Port configuration for the application
+PORT = 8000  # Default port for Django development server
