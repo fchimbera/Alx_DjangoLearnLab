@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-5+mx)b1oat_&wp+q6woesdz*#3evgue_ii*6paka2lsb4cfm-x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []  # Add valid hosts or domain names here
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
